@@ -52,12 +52,20 @@ describe("gift claims", () => {
     expect(Number.isNaN(Date.parse(row.claimedAt))).toBe(false);
   });
 
-  it("rejects a blank claimant", () => {
-    expect(claimGift(db, "breville", "   ")).toEqual({
-      ok: false,
-      reason: "invalid-name",
-    });
-    expect(listClaimedItemIds(db)).toEqual([]);
+  it("allows an anonymous claim, since the name is optional", () => {
+    expect(claimGift(db, "breville", "   ").ok).toBe(true);
+    expect(listClaimedItemIds(db)).toEqual(["breville"]);
+    expect(listClaims(db)[0].claimedBy).toBeNull();
+  });
+
+  it("allows a claim with no name argument at all", () => {
+    expect(claimGift(db, "zojirushi").ok).toBe(true);
+    expect(listClaims(db)[0].claimedBy).toBeNull();
+  });
+
+  it("still records a name when the guest gives one", () => {
+    claimGift(db, "kitchenaid", "  Dana Whitfield  ");
+    expect(listClaims(db)[0].claimedBy).toBe("Dana Whitfield");
   });
 
   it("allows us to force-release a claim when a guest loses their code", () => {

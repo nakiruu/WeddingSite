@@ -16,7 +16,7 @@ const VALID_IDS = new Set(siteConfig.registry.gifts.map((g) => g.id));
 
 export async function claimGiftAction(
   itemId: string,
-  claimedBy: string,
+  claimedBy?: string | null,
 ): Promise<ClaimGiftResult> {
   const db = getDb();
 
@@ -36,10 +36,7 @@ export async function claimGiftAction(
   if (!result.ok) {
     return {
       ok: false,
-      message:
-        result.reason === "already-claimed"
-          ? "Someone just claimed this one. Here is the updated list."
-          : "Please enter your name so we know who to thank.",
+      message: "Someone just claimed this one. Here is the updated list.",
       claimedIds: listClaimedItemIds(db),
     };
   }

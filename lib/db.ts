@@ -16,7 +16,8 @@ import type { RsvpData } from "@/lib/rsvp-schema";
 
 export type ClaimRow = {
   itemId: string;
-  claimedBy: string;
+  /** Null when the guest claimed anonymously — the name is optional. */
+  claimedBy: string | null;
   claimedAt: string;
 };
 
@@ -35,7 +36,7 @@ export type RsvpRow = {
 
 export type ClaimResult =
   | { ok: true; releaseCode: string }
-  | { ok: false; reason: "already-claimed" | "invalid-name" };
+  | { ok: false; reason: "already-claimed" };
 
 export type ReleaseResult =
   | { ok: true }
@@ -144,7 +145,9 @@ export function listClaims(db: DatabaseSync): ClaimRow[] {
     .all() as Record<string, string>[];
   return rows.map((r) => ({
     itemId: r.item_id,
-    claimedBy: r.claimed_by,
+    // An anonymous claim is stored as "" (the column is NOT NULL on databases
+    // created before names became optional); surface it as null.
+    claimedBy: r.claimed_by ? r.claimed_by : null,
     claimedAt: r.claimed_at,
   }));
 }
@@ -162,10 +165,12 @@ export function listClaimedItemIds(db: DatabaseSync): string[] {
 export function claimGift(
   db: DatabaseSync,
   itemId: string,
-  claimedBy: string,
+  claimedBy?: string | null,
 ): ClaimResult {
-  const name = claimedBy.trim();
-  if (!name) return { ok: false, reason: "invalid-name" };
+  // The name is optional: it exists so the couple can write thank-you notes,
+  // and a guest who would rather stay anonymous should not be blocked from
+  // claiming. Release codes, not names, are what authorize cancelling.
+  const name = (claimedBy ?? "").trim().slice(0, 100);
 
   const releaseCode = generateReleaseCode();
 

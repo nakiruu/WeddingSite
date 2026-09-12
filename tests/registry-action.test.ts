@@ -32,11 +32,16 @@ describe("claimGiftAction", () => {
     expect(await getClaimedIds()).toEqual([]);
   });
 
-  it("rejects a blank claimant name", async () => {
+  it("accepts an anonymous claim, since the name is optional", async () => {
     const result = await claimGiftAction("breville", "   ");
-    expect(result.ok).toBe(false);
-    if (!result.ok) expect(result.message).toMatch(/name/i);
-    expect(await getClaimedIds()).toEqual([]);
+    expect(result.ok).toBe(true);
+    expect(await getClaimedIds()).toEqual(["breville"]);
+  });
+
+  it("still issues a release code for an anonymous claim", async () => {
+    const result = await claimGiftAction("breville");
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.releaseCode).toMatch(/^[A-Z0-9]{4}-[A-Z0-9]{4}$/);
   });
 
   it("lets different guests claim different gifts", async () => {

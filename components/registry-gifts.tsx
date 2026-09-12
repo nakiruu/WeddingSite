@@ -228,7 +228,10 @@ export function RegistryGifts({
                 htmlFor="claimed-by"
                 className="mb-2 block text-left font-sans text-[11px] uppercase tracking-[0.1em] text-muted-foreground"
               >
-                Your Name
+                Your Name{" "}
+                <span className="normal-case tracking-normal opacity-70">
+                  (optional)
+                </span>
               </label>
               <Input
                 id="claimed-by"
@@ -239,8 +242,9 @@ export function RegistryGifts({
                 className="mb-2 border-border bg-background"
               />
               <p className="mb-4 text-left font-sans text-[11px] leading-relaxed text-muted-foreground">
-                Only we see this — it is how we know who to thank. Other guests
-                just see that the gift is taken.
+                Only we see this, and only so we know who to thank — leave it
+                blank to claim anonymously. Other guests just see that the gift
+                is taken.
               </p>
 
               {error && (
