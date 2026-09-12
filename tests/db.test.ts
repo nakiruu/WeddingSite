@@ -3,7 +3,7 @@ import type { DatabaseSync } from "node:sqlite";
 import {
   openDatabase,
   claimGift,
-  releaseGift,
+  forceReleaseGift,
   listClaimedItemIds,
   listClaims,
   insertRsvp,
@@ -22,7 +22,7 @@ describe("gift claims", () => {
   });
 
   it("records a claim", () => {
-    expect(claimGift(db, "breville", "Dana Whitfield")).toEqual({ ok: true });
+    expect(claimGift(db, "breville", "Dana Whitfield").ok).toBe(true);
     expect(listClaimedItemIds(db)).toEqual(["breville"]);
   });
 
@@ -60,11 +60,11 @@ describe("gift claims", () => {
     expect(listClaimedItemIds(db)).toEqual([]);
   });
 
-  it("allows releasing a claim so the gift is claimable again", () => {
+  it("allows us to force-release a claim when a guest loses their code", () => {
     claimGift(db, "breville", "Dana");
-    expect(releaseGift(db, "breville")).toEqual({ ok: true });
+    expect(forceReleaseGift(db, "breville")).toEqual({ ok: true });
     expect(listClaimedItemIds(db)).toEqual([]);
-    expect(claimGift(db, "breville", "Rowan")).toEqual({ ok: true });
+    expect(claimGift(db, "breville", "Rowan").ok).toBe(true);
   });
 });
 

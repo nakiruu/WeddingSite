@@ -1,10 +1,14 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { getDb, claimGift, listClaimedItemIds } from "@/lib/db";
+import { getDb, claimGift, releaseGift, listClaimedItemIds } from "@/lib/db";
 import { siteConfig } from "@/lib/site-config";
 
 export type ClaimGiftResult =
+  | { ok: true; releaseCode: string; claimedIds: string[] }
+  | { ok: false; message: string; claimedIds: string[] };
+
+export type ReleaseGiftResult =
   | { ok: true; claimedIds: string[] }
   | { ok: false; message: string; claimedIds: string[] };
 
@@ -27,21 +31,53 @@ export async function claimGiftAction(
   }
 
   const result = claimGift(db, itemId, claimedBy);
+  revalidatePath("/registry");
 
   if (!result.ok) {
-    revalidatePath("/registry");
     return {
       ok: false,
       message:
         result.reason === "already-claimed"
           ? "Someone just claimed this one. Here is the updated list."
-          : "Please enter your name so we know who the gift is from.",
+          : "Please enter your name so we know who to thank.",
       claimedIds: listClaimedItemIds(db),
     };
   }
 
+  return {
+    ok: true,
+    releaseCode: result.releaseCode,
+    claimedIds: listClaimedItemIds(db),
+  };
+}
+
+export async function releaseGiftAction(
+  itemId: string,
+  code: string,
+): Promise<ReleaseGiftResult> {
+  const db = getDb();
+
+  if (!VALID_IDS.has(itemId)) {
+    return {
+      ok: false,
+      message: "That gift is not on the registry.",
+      claimedIds: listClaimedItemIds(db),
+    };
+  }
+
+  const result = releaseGift(db, itemId, code);
   revalidatePath("/registry");
-  return { ok: true, claimedIds: listClaimedItemIds(db) };
+
+  if (result.ok) return { ok: true, claimedIds: listClaimedItemIds(db) };
+
+  const message =
+    result.reason === "not-claimed"
+      ? "That gift is not currently claimed."
+      : result.reason === "no-code-on-record"
+        ? "This claim predates cancellation codes — please let us know and we will clear it."
+        : "That code does not match this gift. Check it and try again.";
+
+  return { ok: false, message, claimedIds: listClaimedItemIds(db) };
 }
 
 export async function getClaimedIds(): Promise<string[]> {

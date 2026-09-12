@@ -1,4 +1,5 @@
 import { DatabaseSync } from "node:sqlite";
+import { createHash, randomInt, timingSafeEqual } from "node:crypto";
 import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import type { RsvpData } from "@/lib/rsvp-schema";
@@ -33,8 +34,50 @@ export type RsvpRow = {
 };
 
 export type ClaimResult =
-  | { ok: true }
+  | { ok: true; releaseCode: string }
   | { ok: false; reason: "already-claimed" | "invalid-name" };
+
+export type ReleaseResult =
+  | { ok: true }
+  | { ok: false; reason: "not-claimed" | "wrong-code" | "no-code-on-record" };
+
+/*
+  Release codes: a capability, not an identity.
+
+  A guest who claims a gift gets a short secret back. Holding it is the only
+  thing that authorizes cancelling that claim — the server never needs to know
+  who they are, so nobody has to make an account. Only the hash is stored, so
+  a leaked database still cannot cancel anyone's claim.
+
+  The alphabet omits 0/O and 1/I/L: a guest reads this off one screen and
+  types it into another, and those are the characters they get wrong.
+*/
+export const RELEASE_CODE_ALPHABET = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
+
+export function generateReleaseCode(): string {
+  let out = "";
+  for (let i = 0; i < 8; i++) {
+    // randomInt is rejection-sampled, so no modulo bias across the 31 letters.
+    out += RELEASE_CODE_ALPHABET[randomInt(0, RELEASE_CODE_ALPHABET.length)];
+  }
+  return `${out.slice(0, 4)}-${out.slice(4)}`;
+}
+
+/** Whatever the guest typed — spaces, dashes, lowercase — becomes one form. */
+function normalizeReleaseCode(code: string): string {
+  return code.replace(/[\s-]/g, "").toUpperCase();
+}
+
+function hashReleaseCode(code: string): string {
+  return createHash("sha256").update(normalizeReleaseCode(code)).digest("hex");
+}
+
+function hashesMatch(a: string, b: string): boolean {
+  const left = Buffer.from(a, "hex");
+  const right = Buffer.from(b, "hex");
+  if (left.length !== right.length) return false;
+  return timingSafeEqual(left, right);
+}
 
 const SCHEMA = `
 CREATE TABLE IF NOT EXISTS gift_claims (
@@ -65,7 +108,20 @@ export function openDatabase(path: string): DatabaseSync {
   db.exec("PRAGMA journal_mode = WAL");
   db.exec("PRAGMA foreign_keys = ON");
   db.exec(SCHEMA);
+  migrate(db);
   return db;
+}
+
+function migrate(db: DatabaseSync) {
+  const columns = db
+    .prepare("PRAGMA table_info(gift_claims)")
+    .all() as { name: string }[];
+
+  if (!columns.some((c) => c.name === "release_code_hash")) {
+    // Nullable on purpose: claims made before release codes existed have no
+    // hash, and those can only be cleared by us rather than by the guest.
+    db.exec("ALTER TABLE gift_claims ADD COLUMN release_code_hash TEXT");
+  }
 }
 
 let singleton: DatabaseSync | null = null;
@@ -111,18 +167,47 @@ export function claimGift(
   const name = claimedBy.trim();
   if (!name) return { ok: false, reason: "invalid-name" };
 
+  const releaseCode = generateReleaseCode();
+
   const result = db
     .prepare(
-      `INSERT INTO gift_claims (item_id, claimed_by, claimed_at)
-       VALUES (?, ?, ?)
+      `INSERT INTO gift_claims (item_id, claimed_by, claimed_at, release_code_hash)
+       VALUES (?, ?, ?, ?)
        ON CONFLICT(item_id) DO NOTHING`,
     )
-    .run(itemId, name, new Date().toISOString());
+    .run(itemId, name, new Date().toISOString(), hashReleaseCode(releaseCode));
 
-  return result.changes === 1 ? { ok: true } : { ok: false, reason: "already-claimed" };
+  return result.changes === 1
+    ? { ok: true, releaseCode }
+    : { ok: false, reason: "already-claimed" };
 }
 
-export function releaseGift(db: DatabaseSync, itemId: string): { ok: true } {
+/**
+ * Cancels a claim. The code is the whole authorization: whoever holds it may
+ * release the gift, and nobody else can, without anyone identifying themselves.
+ */
+export function releaseGift(
+  db: DatabaseSync,
+  itemId: string,
+  code: string,
+): ReleaseResult {
+  const row = db
+    .prepare("SELECT release_code_hash FROM gift_claims WHERE item_id = ?")
+    .get(itemId) as { release_code_hash: string | null } | undefined;
+
+  if (!row) return { ok: false, reason: "not-claimed" };
+  if (!row.release_code_hash) return { ok: false, reason: "no-code-on-record" };
+
+  if (!hashesMatch(row.release_code_hash, hashReleaseCode(code))) {
+    return { ok: false, reason: "wrong-code" };
+  }
+
+  db.prepare("DELETE FROM gift_claims WHERE item_id = ?").run(itemId);
+  return { ok: true };
+}
+
+/** Unconditional release, for when a guest loses their code and asks us. */
+export function forceReleaseGift(db: DatabaseSync, itemId: string): { ok: true } {
   db.prepare("DELETE FROM gift_claims WHERE item_id = ?").run(itemId);
   return { ok: true };
 }
