@@ -8,7 +8,7 @@ import {
   MIN_SECRET_LENGTH,
 } from "@/lib/admin-auth";
 
-const GOOD = "hII5QNHwrgYtv_hYoLlJQCmdVYEw2CZG";
+const GOOD = "test-secret-not-a-real-one-xxxx";
 const original = process.env.ADMIN_SECRET;
 
 beforeEach(() => {

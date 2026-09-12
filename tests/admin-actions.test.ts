@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
-const SECRET = "hII5QNHwrgYtv_hYoLlJQCmdVYEw2CZG";
+const SECRET = "test-secret-not-a-real-one-xxxx";
 process.env.ADMIN_SECRET = SECRET;
 
 /** Stands in for the request's cookie jar; tests swap what it holds. */
