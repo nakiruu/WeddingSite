@@ -4,117 +4,154 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+  Mulberry — light mode ("Bloom"). Every token is also redefined in `.dark`
+  below; nothing may be defined in only one mode.
+
+  Two rules that are easy to break:
+    - `--radius` is 0 everywhere. Mulberry is hairlines and square corners.
+    - `--mulberry` colors rules, icon strokes and borders. Accent-coloured
+      TEXT below 18px uses `--mulberry-strong`, which clears WCAG AA where
+      the plain accent does not (4.17:1 vs 6.6:1 on the dark background).
+*/
+:root {
+  --radius: 0rem;
+
+  --background: #f5edf1;
+  --foreground: #17151a;
+  --card: #ece0e7;
+  --card-foreground: #17151a;
+  --popover: #ece0e7;
+  --popover-foreground: #17151a;
+  --primary: #7b2e5e;
+  --primary-foreground: #ffffff;
+  --primary-hover: #3d1e37;
+  --secondary: #ece0e7;
+  --secondary-foreground: #17151a;
+  --muted: #ece0e7;
+  --muted-foreground: #7d576b;
+  --accent: #ece0e7;
+  --accent-foreground: #17151a;
+  --destructive: #b23b47;
+  --destructive-foreground: #f5edf1;
+  --success: #2f7d5f;
+  --border: #ddd0d8;
+  --input: #ddd0d8;
+  --ring: #7b2e5e;
+
+  --mulberry: #7b2e5e;
+  --mulberry-strong: #7b2e5e;
+
+  --chart-1: #7b2e5e;
+  --chart-2: #ac6284;
+  --chart-3: #3d1e37;
+  --chart-4: #7d576b;
+  --chart-5: #ddd0d8;
+
+  --sidebar: #ece0e7;
+  --sidebar-foreground: #17151a;
+  --sidebar-primary: #7b2e5e;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #ece0e7;
+  --sidebar-accent-foreground: #17151a;
+  --sidebar-border: #ddd0d8;
+  --sidebar-ring: #7b2e5e;
+}
+
+/* Mulberry — dark mode ("Noir"). The default presentation. */
+.dark {
+  --radius: 0rem;
+
+  --background: #17151a;
+  --foreground: #f2e7ec;
+  --card: #3d1e37;
+  --card-foreground: #f2e7ec;
+  --popover: #3d1e37;
+  --popover-foreground: #f2e7ec;
+  --primary: #7b2e5e;
+  --primary-foreground: #ffffff;
+  --primary-hover: #ac6284;
+  --secondary: #3d1e37;
+  --secondary-foreground: #f2e7ec;
+  --muted: #3d1e37;
+  --muted-foreground: #c398ae;
+  --accent: #3d1e37;
+  --accent-foreground: #f2e7ec;
+  --destructive: #d96b6b;
+  --destructive-foreground: #17151a;
+  --success: #5fa98c;
+  --border: #4a3344;
+  --input: #4a3344;
+  --ring: #ac6284;
+
+  --mulberry: #ac6284;
+  --mulberry-strong: #c78ba8;
+
+  --chart-1: #ac6284;
+  --chart-2: #c398ae;
+  --chart-3: #7b2e5e;
+  --chart-4: #4a3344;
+  --chart-5: #3d1e37;
+
+  --sidebar: #3d1e37;
+  --sidebar-foreground: #f2e7ec;
+  --sidebar-primary: #7b2e5e;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #3d1e37;
+  --sidebar-accent-foreground: #f2e7ec;
+  --sidebar-border: #4a3344;
+  --sidebar-ring: #ac6284;
+}
+
 @theme inline {
+  --radius-sm: var(--radius);
+  --radius-md: var(--radius);
+  --radius-lg: var(--radius);
+  --radius-xl: var(--radius);
+
+  --font-display: var(--font-cormorant);
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-cormorant);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
-}
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
 
-:root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
+  --color-mulberry: var(--mulberry);
+  --color-mulberry-strong: var(--mulberry-strong);
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 }
 
 @layer base {
@@ -122,9 +159,32 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
   }
   html {
-    @apply font-sans;
+    scroll-behavior: smooth;
+  }
+}
+
+/* Carried over from the source artboards, which used it on the hero, the
+   welcome block and the RSVP card. The reduced-motion guard is new. */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.8s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up {
+    animation: none;
   }
 }
