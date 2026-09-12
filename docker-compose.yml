@@ -1,0 +1,49 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: wedding-site:latest
+    container_name: wedding-site
+    restart: unless-stopped
+
+    # Host port is deliberately obscure so it does not collide with anything
+    # else on the box and is not among the ports casual scanners try first.
+    # The CONTAINER port stays 3000: internal Docker traffic, the healthcheck
+    # and any reverse proxy on the same network all keep using the default.
+    ports:
+      - "31847:3000"
+
+    # ADMIN_SECRET comes from .env.local, which is gitignored and never enters
+    # an image layer. Compose refuses to start if the file is missing, which is
+    # the same fail-closed behaviour the app itself has.
+    env_file:
+      - .env.local
+
+    environment:
+      NODE_ENV: production
+      WEDDING_DB_PATH: /app/data/wedding.db
+
+    # RSVPs and gift claims live in this volume. Without it every `docker
+    # compose up --build` would hand guests a brand-new empty registry.
+    volumes:
+      - wedding-data:/app/data
+
+    # Belt and braces on top of the image's own HEALTHCHECK, so `docker compose
+    # ps` reports health even if the image is ever rebuilt without one.
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  wedding-data:
+    driver: local

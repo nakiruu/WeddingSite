@@ -55,6 +55,35 @@ inverts the source's resting/hover pair instead of abandoning it.
 `tests/theme.test.ts` pins every token value in both modes and asserts the
 two blocks declare identical key sets.
 
+## Docker
+
+```bash
+cp .env.example .env.local   # then set ADMIN_SECRET
+docker compose up -d --build
+```
+
+Then open **http://<host>:31847**.
+
+The host port is deliberately obscure so it does not collide with anything else
+on the box. The **container** port stays `3000`, so the healthcheck, any
+reverse proxy on the same Docker network, and the image itself all keep using
+the default — only the published port is unusual.
+
+Two things this setup depends on:
+
+- **`ADMIN_SECRET` is read from `.env.local`.** Compose will not start without
+  that file, and the app locks `/admin` if the value is missing or too short.
+  The secret is never baked into an image layer.
+- **RSVPs and gift claims live in the `wedding-data` volume**, mounted at
+  `/app/data`. Do not remove it — `docker compose down -v` deletes every
+  response and claim. `docker compose down` on its own is safe.
+
+To back the database up:
+
+```bash
+docker compose cp web:/app/data/wedding.db ./wedding-backup.db
+```
+
 ## Admin page
 
 `/admin` shows every RSVP and every claimed gift. It is locked behind a single

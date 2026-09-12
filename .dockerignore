@@ -1,0 +1,29 @@
+# Build artifacts and local state — never copy these into the build context.
+node_modules
+.next
+out
+build
+coverage
+
+# The SQLite database is runtime state and lives in a volume, not the image.
+data
+
+# Secrets. The container gets ADMIN_SECRET from compose, never from a layer.
+.env
+.env.*
+
+# Repo and tooling noise
+.git
+.gitignore
+.worktrees
+.superpowers
+.claude
+docs
+tests
+vitest.config.ts
+README.md
+*.md
+!AGENTS.md
+Dockerfile
+.dockerignore
+docker-compose.yml
