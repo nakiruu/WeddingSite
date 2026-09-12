@@ -241,6 +241,14 @@ export function insertRsvp(db: DatabaseSync, rsvp: RsvpData): number {
   return Number(result.lastInsertRowid);
 }
 
+export function deleteRsvp(
+  db: DatabaseSync,
+  id: number,
+): { ok: true } | { ok: false; reason: "not-found" } {
+  const result = db.prepare("DELETE FROM rsvps WHERE id = ?").run(id);
+  return result.changes === 1 ? { ok: true } : { ok: false, reason: "not-found" };
+}
+
 export function listRsvps(db: DatabaseSync): RsvpRow[] {
   const rows = db
     .prepare("SELECT * FROM rsvps ORDER BY created_at")

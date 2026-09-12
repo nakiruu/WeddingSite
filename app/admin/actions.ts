@@ -7,7 +7,9 @@ import {
   adminSecretConfigured,
   currentSessionToken,
   secretMatches,
+  sessionTokenIsValid,
 } from "@/lib/admin-auth";
+import { getDb, deleteRsvp, forceReleaseGift } from "@/lib/db";
 
 export type SignInResult = { ok: true } | { ok: false; message: string };
 
@@ -71,4 +73,53 @@ export async function signOut(): Promise<void> {
   const jar = await cookies();
   jar.delete({ name: ADMIN_COOKIE, path: "/admin" });
   revalidatePath("/admin");
+}
+
+export type MutationResult = { ok: true } | { ok: false; message: string };
+
+/*
+  Every mutation below re-checks the session.
+
+  A Server Action is a public HTTP endpoint — it is not protected by the fact
+  that the page rendering its button checked a cookie. Without this, anyone who
+  knew the action id could delete a guest's RSVP without ever seeing /admin.
+*/
+async function isAdmin(): Promise<boolean> {
+  const jar = await cookies();
+  return sessionTokenIsValid(jar.get(ADMIN_COOKIE)?.value);
+}
+
+const DENIED: MutationResult = {
+  ok: false,
+  message: "Your session has expired. Unlock the page again.",
+};
+
+export async function deleteRsvpAction(id: number): Promise<MutationResult> {
+  if (!(await isAdmin())) return DENIED;
+
+  if (!Number.isInteger(id) || id <= 0) {
+    return { ok: false, message: "That response no longer exists." };
+  }
+
+  const result = deleteRsvp(getDb(), id);
+  revalidatePath("/admin");
+
+  return result.ok
+    ? { ok: true }
+    : { ok: false, message: "That response no longer exists." };
+}
+
+/**
+ * Clears a gift claim on the guest's behalf — the escape hatch for someone
+ * who lost their cancellation code. The gift becomes claimable again.
+ */
+export async function releaseClaimAction(
+  itemId: string,
+): Promise<MutationResult> {
+  if (!(await isAdmin())) return DENIED;
+
+  forceReleaseGift(getDb(), itemId);
+  revalidatePath("/admin");
+  revalidatePath("/registry");
+  return { ok: true };
 }
