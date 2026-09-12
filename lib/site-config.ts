@@ -21,6 +21,40 @@ export type QuickLink = {
 const MAPS_URL =
   "https://maps.google.com/?q=12355+Fort+Caroline+Rd+Jacksonville+FL+32225";
 
+export type ContributeConfig = {
+  /** Deep-links straight into the Venmo app or web with the note prefilled. */
+  venmo: { handle: string; url: string } | null;
+  /**
+   * Zelle has no payment URL — it lives inside each bank's own app — so the
+   * only thing a page can do is show the number for the guest to type in.
+   */
+  zelle: { phone: string; display: string } | null;
+  /** Set `url` to a Stripe Payment Link to switch the card button on. */
+  stripe: { url: string } | null;
+};
+
+const VENMO_HANDLE = "nzubulidis";
+
+// Annotated separately so `stripe: null` stays widened to `{url} | null`;
+// under the outer `as const` it would narrow to the literal `null` and the
+// "card payments are live" branch would become unreachable dead code.
+const contribute: ContributeConfig = {
+  venmo: {
+    handle: VENMO_HANDLE,
+    url: `https://venmo.com/?txn=pay&recipients=${VENMO_HANDLE}&note=${encodeURIComponent(
+      "Julie & Nick — Honeymoon Fund",
+    )}`,
+  },
+  zelle: {
+    phone: "9046246439",
+    display: "(904) 624-6439",
+  },
+  // TODO(stripe): create a Payment Link in the Stripe dashboard with
+  // "let customers choose the amount" enabled, then paste it here as
+  // `stripe: { url: "https://buy.stripe.com/..." }`. No other change needed.
+  stripe: null,
+};
+
 /**
  * Every wedding fact lives here. The homepage, the RSVP page, the footer and
  * the page metadata all read from it, so a date change is a single edit.
@@ -78,6 +112,7 @@ export const siteConfig = {
       description:
         "Help us create unforgettable memories on our honeymoon. Any contribution, big or small, means the world to us.",
       raised: "$0 raised",
+      contribute,
     },
     gifts: [
       {

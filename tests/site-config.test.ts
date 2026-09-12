@@ -87,3 +87,26 @@ describe("registry", () => {
     expect(siteConfig.registry.honeymoon.raised).toBe("$0 raised");
   });
 });
+
+describe("honeymoon contribution methods", () => {
+  const { venmo, zelle, stripe } = siteConfig.registry.honeymoon.contribute;
+
+  it("deep-links Venmo to the right handle with a prefilled note", () => {
+    expect(venmo?.handle).toBe("nzubulidis");
+    expect(venmo?.url).toContain("recipients=nzubulidis");
+    expect(venmo?.url).toContain("txn=pay");
+    // The note is what shows up in the Venmo feed, so it must be encoded.
+    expect(venmo?.url).toContain(encodeURIComponent("Julie & Nick — Honeymoon Fund"));
+  });
+
+  it("carries a raw Zelle number to copy and a formatted one to read", () => {
+    expect(zelle?.phone).toBe("9046246439");
+    expect(zelle?.display).toBe("(904) 624-6439");
+    // The copy target must be digits only — banking apps reject punctuation.
+    expect(zelle?.phone).toMatch(/^\d{10}$/);
+  });
+
+  it("leaves Stripe unset until a Payment Link exists", () => {
+    expect(stripe).toBeNull();
+  });
+});

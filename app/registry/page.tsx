@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SectionEyebrow } from "@/components/section-eyebrow";
 import { RegistryGifts } from "@/components/registry-gifts";
+import { ContributeButtons } from "@/components/contribute-buttons";
 import { getClaimedIds } from "@/app/registry/actions";
 import { siteConfig } from "@/lib/site-config";
 
@@ -53,15 +54,7 @@ export default async function RegistryPage() {
             {siteConfig.registry.honeymoon.description}
           </p>
 
-          <p className="mb-6 font-sans text-[13px] tracking-[0.04em] text-muted-foreground">
-            {siteConfig.registry.honeymoon.raised}
-          </p>
-
-          {/* Contributions are not wired to a payment processor yet, so this
-              says so rather than presenting a button that does nothing. */}
-          <p className="font-sans text-xs text-muted-foreground">
-            Contributions open closer to the day — we will share details here.
-          </p>
+          <ContributeButtons />
         </div>
 
         <RegistryGifts initialClaimedIds={claimedIds} />
