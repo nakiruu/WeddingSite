@@ -19,7 +19,11 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      aria-label={`Switch to ${label.toLowerCase()} theme`}
+      // Must be gated on `mounted` like the icon and text below: the server
+      // renders with resolvedTheme undefined, so an ungated label says
+      // "Switch to dark theme" on the server and "…to light theme" on the
+      // client, which React reports as a hydration mismatch.
+      aria-label={mounted ? `Switch to ${label.toLowerCase()} theme` : "Toggle theme"}
       className="flex items-center gap-2 border border-border px-3.5 py-1.5 font-sans text-[11px] uppercase tracking-[0.06em] text-muted-foreground transition-colors hover:border-mulberry hover:text-mulberry-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
     >
       <span className="inline-flex size-3.5 items-center justify-center">

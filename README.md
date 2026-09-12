@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Julie & Nick — Wedding Site
 
-## Getting Started
+Next.js 16 + Tailwind v4 + shadcn/ui. Ported from a Claude Design canvas
+export; see `docs/superpowers/specs/2026-09-12-wedding-site-nextjs-design.md`
+for the design and `docs/superpowers/plans/2026-09-12-wedding-site-nextjs.md`
+for the build plan.
 
-First, run the development server:
+## Commands
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev        # development server
+npm run build      # production build
+npm test           # Vitest
+npm run typecheck  # tsc --noEmit  (run `npm run build` first, see below)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`npm run typecheck` depends on the route types Next generates into
+`.next/types`, so on a clean checkout run `npm run build` at least once
+before it.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Stack notes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This project is on **Next 16** and **shadcn v4 with the `base-nova` style,
+which is built on Base UI, not Radix**. Two consequences worth knowing before
+you add components:
 
-## Learn More
+- Component props follow Base UI (`onValueChange`, `onCheckedChange`), and
+  `cn` is imported from the bare `cn` package, not `@/lib/utils`.
+- `npx shadcn add form` is a no-op in this release, so
+  `components/ui/form.tsx` is authored locally. It is the standard
+  react-hook-form wiring; `FormControl` clones its child rather than using a
+  Radix Slot.
 
-To learn more about Next.js, take a look at the following resources:
+`<html>` carries `data-scroll-behavior="smooth"` because Next 16 no longer
+overrides a global `scroll-behavior: smooth` during route transitions.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Theme
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The Mulberry palette is expressed as shadcn's CSS-variable contract in
+`app/globals.css` — light values on `:root`, dark on `.dark`. Dark is the
+default and the OS preference is deliberately ignored, matching the canvas.
 
-## Deploy on Vercel
+Two rules that are easy to break:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Zero border radius everywhere.** `--radius: 0rem`.
+- **`--mulberry` is for rules, icon strokes and borders; `--mulberry-strong`
+  is for accent-coloured text below 18px.** The plain accent measures 4.17:1
+  on the dark background — fine for a hairline, under AA for the 11px
+  eyebrows. `--mulberry-strong` measures 6.6:1.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Buttons fill with `#7b2e5e` in *both* modes (7.7:1 against white). The
+lighter mauve `#ac6284` cannot carry white or black text at AA, so dark mode
+inverts the source's resting/hover pair instead of abandoning it.
+
+`tests/theme.test.ts` pins every token value in both modes and asserts the
+two blocks declare identical key sets.
+
+## Placeholders
+
+These are deliberate and marked:
+
+1. **RSVP responses are not saved.** `app/rsvp/actions.ts` validates and logs
+   to the console. Replace the `TODO(persistence)` line with a real store.
+2. **The hero photo is a hotlinked Unsplash URL** in `lib/site-config.ts`.
+3. **Schedule, Travel, Registry and FAQ are WIP stubs** rendering
+   `components/wip-page.tsx`.
+
+## Content
+
+Every wedding fact lives in `lib/site-config.ts` and is pinned by
+`tests/site-config.test.ts`. Change the date there, not in a component.
