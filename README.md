@@ -55,6 +55,25 @@ inverts the source's resting/hover pair instead of abandoning it.
 `tests/theme.test.ts` pins every token value in both modes and asserts the
 two blocks declare identical key sets.
 
+## Admin page
+
+`/admin` shows every RSVP and every claimed gift. It is locked behind a single
+shared secret in `ADMIN_SECRET` — copy `.env.example` to `.env.local` and set
+one:
+
+```bash
+node -e "console.log(require('node:crypto').randomBytes(24).toString('base64url'))"
+```
+
+The secret is exchanged for an httpOnly session cookie; it never appears in a
+URL, so it cannot leak through browser history, `Referer` headers, or access
+logs. **If `ADMIN_SECRET` is unset or shorter than 16 characters the page locks
+for everyone** — it fails closed, never open. Changing the secret signs out any
+existing session.
+
+The page is `noindex`, server-rendered per request, and reads the database only
+after the check passes, so an unauthorized request never loads guest data.
+
 ## Placeholders
 
 These are deliberate and marked:
