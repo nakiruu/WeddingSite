@@ -1,6 +1,7 @@
 "use server";
 
 import { rsvpSchema, normalizeRsvp, type RsvpInput } from "@/lib/rsvp-schema";
+import { getDb, insertRsvp } from "@/lib/db";
 
 export type RsvpResult =
   | { ok: true }
@@ -22,10 +23,18 @@ export async function submitRsvp(values: RsvpInput): Promise<RsvpResult> {
 
   const rsvp = normalizeRsvp(parsed.data);
 
-  // TODO(persistence): write `rsvp` to the real store — database, email, or
-  // spreadsheet. This console record is the only thing standing in for it,
-  // so responses are NOT durably saved until this line is replaced.
-  console.info("[rsvp] received", rsvp);
+  try {
+    insertRsvp(getDb(), rsvp);
+  } catch (err) {
+    // A guest who filled the form correctly should never be told their input
+    // is wrong because our disk is full — report the failure as ours.
+    console.error("[rsvp] failed to save", err);
+    return {
+      ok: false,
+      message:
+        "We could not save your response just now. Please try again in a moment.",
+    };
+  }
 
   return { ok: true };
 }

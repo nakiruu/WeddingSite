@@ -1,5 +1,15 @@
 export type MealOption = { value: string; label: string };
 export type NavItem = { href: string; label: string };
+export type Gift = {
+  id: string;
+  brand: string;
+  name: string;
+  description: string;
+  price: string;
+  url: string;
+  icon: "espresso" | "mixer" | "ricecooker";
+  iconLabel: string;
+};
 export type QuickLink = {
   href: string;
   label: string;
@@ -59,6 +69,52 @@ export const siteConfig = {
     { href: "/registry", label: "Registry" },
     { href: "/faq", label: "FAQ" },
   ] satisfies NavItem[],
+
+  registry: {
+    intro:
+      "Your presence is the greatest gift, but if you'd like to help us start our new life together, here are a few things we'd love.",
+    honeymoon: {
+      title: "Honeymoon Fund",
+      description:
+        "Help us create unforgettable memories on our honeymoon. Any contribution, big or small, means the world to us.",
+      raised: "$0 raised",
+    },
+    gifts: [
+      {
+        id: "breville",
+        brand: "Breville",
+        name: "Barista Express Impress",
+        description:
+          "Semi-automatic espresso machine with built-in grinder. Damson Blue.",
+        price: "$799.95",
+        url: "https://www.amazon.com/Breville-Barista-Express-Espresso-BES876DBL/dp/B0CGJZW53Q/",
+        icon: "espresso",
+        iconLabel: "Espresso Machine",
+      },
+      {
+        id: "kitchenaid",
+        brand: "KitchenAid",
+        name: "Classic 4.5 Qt Stand Mixer",
+        description:
+          "10-speed tilt-head stand mixer with 4.5-quart stainless steel bowl. Onyx Black.",
+        price: "$399.99",
+        url: "https://www.amazon.com/KitchenAid-Classic-Quart-Tilt-Head-K45SSOB/dp/B003OXNBYC/",
+        icon: "mixer",
+        iconLabel: "Stand Mixer",
+      },
+      {
+        id: "zojirushi",
+        brand: "Zojirushi",
+        name: "Micom 3-Cup Rice Cooker",
+        description:
+          "Fuzzy logic rice cooker & warmer with 8 preset cooking options. Stainless Black.",
+        price: "$189.99",
+        url: "https://www.amazon.com/Zojirushi-NS-LGC05XB-Cooker-uncooked-Stainless/dp/B01EVHWNVG/",
+        icon: "ricecooker",
+        iconLabel: "Rice Cooker",
+      },
+    ] satisfies Gift[],
+  },
 
   quickLinks: [
     {

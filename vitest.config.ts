@@ -7,6 +7,9 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["tests/**/*.test.ts"],
+    // Server actions resolve their database through getDb(); pointing it at
+    // an in-memory database keeps tests off the real data/ file.
+    env: { WEDDING_DB_PATH: ":memory:" },
   },
   resolve: {
     alias: {

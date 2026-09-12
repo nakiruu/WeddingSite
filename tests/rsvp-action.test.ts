@@ -1,16 +1,13 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { submitRsvp } from "@/app/rsvp/actions";
+import { getDb, listRsvps } from "@/lib/db";
 
 beforeEach(() => {
-  vi.spyOn(console, "info").mockImplementation(() => {});
-});
-
-afterEach(() => {
-  vi.restoreAllMocks();
+  getDb().exec("DELETE FROM rsvps");
 });
 
 describe("submitRsvp", () => {
-  it("accepts a complete response", async () => {
+  it("accepts a complete response and persists it", async () => {
     const result = await submitRsvp({
       guestName: "Dana Whitfield",
       attendance: "accept",
@@ -18,6 +15,11 @@ describe("submitRsvp", () => {
       plusOne: false,
     });
     expect(result.ok).toBe(true);
+
+    const rows = listRsvps(getDb());
+    expect(rows).toHaveLength(1);
+    expect(rows[0].guestName).toBe("Dana Whitfield");
+    expect(rows[0].meal).toBe("salmon");
   });
 
   it("rejects a payload that skipped client validation", async () => {
@@ -31,6 +33,7 @@ describe("submitRsvp", () => {
       expect(result.fieldErrors?.guestName).toBeDefined();
       expect(result.fieldErrors?.meal).toBeDefined();
     }
+    expect(listRsvps(getDb())).toHaveLength(0);
   });
 
   it("rejects an incomplete plus-one", async () => {
@@ -44,10 +47,10 @@ describe("submitRsvp", () => {
     if (!result.ok) {
       expect(result.fieldErrors?.plusOneName).toBeDefined();
     }
+    expect(listRsvps(getDb())).toHaveLength(0);
   });
 
-  it("records a declining guest without meal details", async () => {
-    const spy = vi.spyOn(console, "info");
+  it("stores a declining guest without meal or plus-one details", async () => {
     const result = await submitRsvp({
       guestName: "Dana Whitfield",
       attendance: "decline",
@@ -57,9 +60,10 @@ describe("submitRsvp", () => {
     });
     expect(result.ok).toBe(true);
 
-    const recorded = spy.mock.calls.at(-1)?.[1] as Record<string, unknown>;
-    expect(recorded.meal).toBeUndefined();
-    expect(recorded.plusOneName).toBeUndefined();
-    expect(recorded.plusOne).toBe(false);
+    const [row] = listRsvps(getDb());
+    expect(row.attendance).toBe("decline");
+    expect(row.meal).toBeNull();
+    expect(row.plusOneName).toBeNull();
+    expect(row.plusOne).toBe(false);
   });
 });

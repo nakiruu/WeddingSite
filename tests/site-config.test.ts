@@ -59,3 +59,31 @@ describe("siteConfig", () => {
     expect(siteConfig.heroImage.alt).toBe("");
   });
 });
+
+describe("registry", () => {
+  it("carries the three gifts from the canvas, in order", () => {
+    expect(siteConfig.registry.gifts.map((g) => g.id)).toEqual([
+      "breville",
+      "kitchenaid",
+      "zojirushi",
+    ]);
+    expect(siteConfig.registry.gifts.map((g) => g.price)).toEqual([
+      "$799.95",
+      "$399.99",
+      "$189.99",
+    ]);
+  });
+
+  it("gives every gift a unique id and an external link", () => {
+    const ids = siteConfig.registry.gifts.map((g) => g.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    for (const gift of siteConfig.registry.gifts) {
+      expect(gift.url.startsWith("https://"), gift.id).toBe(true);
+    }
+  });
+
+  it("carries the honeymoon fund copy", () => {
+    expect(siteConfig.registry.honeymoon.title).toBe("Honeymoon Fund");
+    expect(siteConfig.registry.honeymoon.raised).toBe("$0 raised");
+  });
+});
