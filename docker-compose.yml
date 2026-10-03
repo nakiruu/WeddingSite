@@ -24,10 +24,14 @@ services:
       NODE_ENV: production
       WEDDING_DB_PATH: /app/data/wedding.db
 
-    # RSVPs and gift claims live in this volume. Without it every `docker
-    # compose up --build` would hand guests a brand-new empty registry.
+    # RSVPs and gift claims live on the host at /srv/weddingdb/wedding.db, so
+    # they survive rebuilds and can be backed up with ordinary file tools.
+    # Mount the DIRECTORY, not the file: SQLite's WAL mode also writes -wal and
+    # -shm siblings next to it. A bind mount keeps the host's ownership, so the
+    # directory must be writable by the container user (uid/gid 1001):
+    #   sudo mkdir -p /srv/weddingdb && sudo chown 1001:1001 /srv/weddingdb
     volumes:
-      - wedding-data:/app/data
+      - /srv/weddingdb:/app/data
 
     # Belt and braces on top of the image's own HEALTHCHECK, so `docker compose
     # ps` reports health even if the image is ever rebuilt without one.
@@ -43,7 +47,3 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-
-volumes:
-  wedding-data:
-    driver: local

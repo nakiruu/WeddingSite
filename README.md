@@ -57,7 +57,13 @@ two blocks declare identical key sets.
 
 ## Docker
 
+On the server the project lives in `/opt/WeddingSite`. The database directory
+must exist and belong to the container's user (uid/gid `1001`) before the first
+start:
+
 ```bash
+sudo mkdir -p /srv/weddingdb && sudo chown 1001:1001 /srv/weddingdb
+cd /opt/WeddingSite
 cp .env.example .env.local   # then set ADMIN_SECRET
 docker compose up -d --build
 ```
@@ -74,15 +80,19 @@ Two things this setup depends on:
 - **`ADMIN_SECRET` is read from `.env.local`.** Compose will not start without
   that file, and the app locks `/admin` if the value is missing or too short.
   The secret is never baked into an image layer.
-- **RSVPs and gift claims live in the `wedding-data` volume**, mounted at
-  `/app/data`. Do not remove it — `docker compose down -v` deletes every
-  response and claim. `docker compose down` on its own is safe.
+- **RSVPs and gift claims live on the host at `/srv/weddingdb/wedding.db`**,
+  bind-mounted to `/app/data`. Rebuilds and `docker compose down` (even with
+  `-v`) leave it alone; only deleting that directory loses responses.
 
-To back the database up:
+To back the database up while the site is running, use SQLite's online backup
+rather than `cp` — the file runs in WAL mode, so recent writes may still sit in
+`wedding.db-wal` and a plain copy can miss them:
 
 ```bash
-docker compose cp web:/app/data/wedding.db ./wedding-backup.db
+sudo sqlite3 /srv/weddingdb/wedding.db ".backup '/root/wedding-backup.db'"
 ```
+
+(`sudo apt install sqlite3` if the CLI is not on the host.)
 
 ## Admin page
 
