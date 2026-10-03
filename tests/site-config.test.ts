@@ -110,3 +110,42 @@ describe("honeymoon contribution methods", () => {
     expect(stripe).toBeNull();
   });
 });
+
+describe("travel", () => {
+  const { travel } = siteConfig;
+
+  it("lists the three nearby hotels, in order", () => {
+    expect(travel.hotels.map((h) => h.name)).toEqual([
+      "Hampton Inn Jacksonville East Regency Square",
+      "TownePlace Suites by Marriott Jacksonville Mayport",
+      "Courtyard by Marriott Jacksonville I-295/East Beltway",
+    ]);
+  });
+
+  it("gives every hotel a unique id, a local photo and an https link", () => {
+    const ids = travel.hotels.map((h) => h.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    for (const hotel of travel.hotels) {
+      expect(hotel.image.src).toMatch(/^\/travel\//);
+      expect(hotel.image.alt).not.toBe("");
+      expect(hotel.url).toMatch(/^https:\/\//);
+    }
+  });
+
+  it("keeps ad-tracking parameters out of the hotel links", () => {
+    for (const hotel of travel.hotels) {
+      expect(hotel.url).not.toMatch(/WT\.mc_id|dsclid|hmGUID|adType/);
+    }
+  });
+
+  it("embeds and links the same My Maps map", () => {
+    const id = "1bNUtd_IxHJV8D5h7WSqiZgbRNFM5xdM";
+    expect(travel.map.embedUrl).toBe(`https://www.google.com/maps/d/embed?mid=${id}`);
+    expect(travel.map.viewUrl).toBe(`https://www.google.com/maps/d/viewer?mid=${id}`);
+  });
+
+  it("has three tips and four local picks", () => {
+    expect(travel.tips.map((t) => t.title)).toEqual(["By Air", "By Car", "What to Pack"]);
+    expect(travel.localPicks).toHaveLength(4);
+  });
+});

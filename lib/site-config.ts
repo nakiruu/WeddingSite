@@ -10,6 +10,22 @@ export type Gift = {
   icon: "espresso" | "mixer" | "ricecooker";
   iconLabel: string;
 };
+export type Hotel = {
+  id: string;
+  name: string;
+  street: string;
+  cityStateZip: string;
+  distance: string;
+  priceFrom: string;
+  url: string;
+  image: { src: string; alt: string };
+};
+export type TravelTip = {
+  title: string;
+  body: string;
+  icon: "plane" | "car" | "suitcase";
+};
+export type LocalPick = { name: string; note: string; url: string };
 export type QuickLink = {
   href: string;
   label: string;
@@ -149,6 +165,106 @@ export const siteConfig = {
         iconLabel: "Rice Cooker",
       },
     ] satisfies Gift[],
+  },
+
+  travel: {
+    intro:
+      "We’re so glad you’re making the trip. Here’s everything you need to get to Jacksonville and settle in — we can’t wait to celebrate with you.",
+    airport: {
+      name: "Jacksonville Intl (JAX)",
+      distance: "18.5 mi · 21 min drive",
+    },
+    // A Google My Maps map with the chapel, the hotels and the airport. The
+    // embed URL is the same map id under /embed; /viewer is the full page.
+    map: {
+      embedUrl:
+        "https://www.google.com/maps/d/embed?mid=1bNUtd_IxHJV8D5h7WSqiZgbRNFM5xdM",
+      viewUrl:
+        "https://www.google.com/maps/d/viewer?mid=1bNUtd_IxHJV8D5h7WSqiZgbRNFM5xdM",
+    },
+    tips: [
+      {
+        title: "By Air",
+        body: "Fly into Jacksonville International (JAX), about 21 minutes from the chapel.",
+        icon: "plane",
+      },
+      {
+        title: "By Car",
+        body: "Parking details will be updated soon.",
+        icon: "car",
+      },
+      {
+        title: "What to Pack",
+        body: "January in Jacksonville is mild, with sunny days in the 60s and cool evenings. Bring a light jacket for after dark.",
+        icon: "suitcase",
+      },
+    ] satisfies TravelTip[],
+    // No room block: these are simply nearby options, with the lowest rate
+    // seen when they were added. Update `priceFrom` by hand if it drifts.
+    hotels: [
+      {
+        id: "hampton-inn",
+        name: "Hampton Inn Jacksonville East Regency Square",
+        street: "1021 Hospitality Ln",
+        cityStateZip: "Jacksonville, FL 32225",
+        distance: "4.5 mi · 10 min to chapel",
+        priceFrom: "$89",
+        // Tracking parameters stripped; the dates pre-fill Hilton's search.
+        url: "https://www.hilton.com/en/book/reservation/rooms/?ctyhocn=JAXRSHX&arrivalDate=2027-01-14&departureDate=2027-01-15&room1NumAdults=1",
+        image: {
+          src: "/travel/hampton-inn.jpg",
+          alt: "Hampton Inn Jacksonville East Regency Square at dusk, its entrance lined with palm trees",
+        },
+      },
+      {
+        id: "towneplace-suites",
+        name: "TownePlace Suites by Marriott Jacksonville Mayport",
+        street: "2580 Mayport Rd",
+        cityStateZip: "Jacksonville, FL 32233",
+        distance: "7.4 mi · 11 min to chapel",
+        priceFrom: "$141",
+        url: "https://www.marriott.com/en-us/hotels/jaxat-towneplace-suites-jacksonville-mayport/overview/",
+        image: {
+          src: "/travel/towneplace-suites.webp",
+          alt: "TownePlace Suites by Marriott Jacksonville Mayport, a four-storey hotel with palm trees at the entrance",
+        },
+      },
+      {
+        id: "courtyard",
+        name: "Courtyard by Marriott Jacksonville I-295/East Beltway",
+        street: "9815 Lantern St",
+        cityStateZip: "Jacksonville, FL 32225",
+        distance: "4.4 mi · 8 min to chapel",
+        priceFrom: "$109",
+        url: "https://www.marriott.com/en-us/hotels/jaxne-courtyard-jacksonville-i-295-east-beltway/overview/",
+        image: {
+          src: "/travel/courtyard.webp",
+          alt: "Courtyard by Marriott Jacksonville I-295/East Beltway, a red-brick hotel with a covered entrance at dusk",
+        },
+      },
+    ] satisfies Hotel[],
+    localPicks: [
+      {
+        name: "Mezza Luna Ristorante",
+        note: "Amazing Italian food with many great options.",
+        url: "http://www.mezzalunajax.com/",
+      },
+      {
+        name: "Ellianos Coffee",
+        note: "Great coffee, energy drinks, and snacks.",
+        url: "http://ellianos.com/",
+      },
+      {
+        name: "Jacksonville Arboretum & Botanical Gardens",
+        note: "Beautiful Arboretum and it’s where Nick and Julie got engaged.",
+        url: "http://www.jacksonvillearboretum.org/",
+      },
+      {
+        name: "Jacksonville Zoo and Botanical Gardens",
+        note: "A beautiful zoo with a focus on conservation.",
+        url: "http://www.jacksonvillezoo.org/",
+      },
+    ] satisfies LocalPick[],
   },
 
   quickLinks: [
