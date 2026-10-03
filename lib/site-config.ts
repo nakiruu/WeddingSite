@@ -19,7 +19,7 @@ export type QuickLink = {
 };
 
 const MAPS_URL =
-  "https://maps.google.com/?q=12355+Fort+Caroline+Rd+Jacksonville+FL+32225";
+  "https://www.google.com/maps/place/The+Social+Chapel/@30.3798196,-81.505224,17z/data=!3m1!4b1!4m6!3m5!1s0x88e44d84265537db:0x789ecc6049dc202d!8m2!3d30.379815!4d-81.5026491!16s%2Fg%2F11mcz5djc6?entry=ttu&g_ep=EgoyMDI2MDkzMC4wIKXMDSoASAFQAw%3D%3D";
 
 export type ContributeConfig = {
   /** Deep-links straight into the Venmo app or web with the note prefilled. */
@@ -61,7 +61,7 @@ const contribute: ContributeConfig = {
  * `tests/site-config.test.ts` pins the values against the source artboards.
  */
 export const siteConfig = {
-  couple: { first: "Julie", second: "Nick", joined: "Julie & Nick" },
+  couple: { first: "Nick", second: "Julie", joined: "Nick & Julie" },
 
   date: {
     iso: "2027-01-14",
@@ -76,7 +76,7 @@ export const siteConfig = {
     mapsUrl: MAPS_URL,
   },
 
-  rsvpDeadline: "December 14, 2026",
+  rsvpDeadline: "November 14, 2026",
 
   footerLine: "January 14, 2027 · Jacksonville, FL",
 

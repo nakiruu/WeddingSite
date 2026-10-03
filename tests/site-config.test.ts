@@ -3,7 +3,7 @@ import { siteConfig } from "@/lib/site-config";
 
 describe("siteConfig", () => {
   it("carries the couple and date", () => {
-    expect(siteConfig.couple.joined).toBe("Julie & Nick");
+    expect(siteConfig.couple.joined).toBe("Nick & Julie");
     expect(siteConfig.date.long).toBe("January 14th, 2027");
     expect(siteConfig.date.iso).toBe("2027-01-14");
     expect(siteConfig.footerLine).toBe("January 14, 2027 · Jacksonville, FL");
@@ -13,11 +13,11 @@ describe("siteConfig", () => {
     expect(siteConfig.venue.name).toBe("The Social Chapel");
     expect(siteConfig.venue.street).toBe("12355 Fort Caroline Rd");
     expect(siteConfig.venue.cityStateZip).toBe("Jacksonville, FL 32225");
-    expect(siteConfig.venue.mapsUrl).toContain("Fort+Caroline");
+    expect(siteConfig.venue.mapsUrl).toContain("The+Social+Chapel");
   });
 
   it("carries the RSVP deadline", () => {
-    expect(siteConfig.rsvpDeadline).toBe("December 14, 2026");
+    expect(siteConfig.rsvpDeadline).toBe("November 14, 2026");
   });
 
   it("offers exactly the three meals from the design", () => {
