@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" fill="none">
+  <!--
+    The rose from the nav home button (components/rose-icon.tsx). Opacities are
+    raised from the nav version, which sits at 28px; at 16px in a browser tab
+    the faint stem and leaves would disappear. Mulberry on light tabs, the
+    lighter mulberry-strong on dark ones.
+  -->
+  <style>
+    svg { color: #7b2e5e; }
+    @media (prefers-color-scheme: dark) { svg { color: #c78ba8; } }
+  </style>
+  <path d="M14 4C14 4 16.5 2 18 3C19.5 4 18 7 17 8C16 9 14 10 14 10C14 10 12 9 11 8C10 7 8.5 4 10 3C11.5 2 14 4 14 4Z" fill="currentColor"/>
+  <path d="M14 10C14 10 18 8 20 9.5C22 11 20 14 18.5 15C17 16 14 16.5 14 16.5C14 16.5 11 16 9.5 15C8 14 6 11 8 9.5C10 8 14 10 14 10Z" fill="currentColor" opacity="0.8"/>
+  <path d="M14 16.5C14 16.5 16 17 16.5 19C17 21 15 23 14 24C13 23 11 21 11.5 19C12 17 14 16.5 14 16.5Z" fill="currentColor" opacity="0.65"/>
+  <line x1="14" y1="16" x2="14" y2="26" stroke="currentColor" stroke-width="1.6" opacity="0.75"/>
+  <path d="M14 20C14 20 11.5 18.5 10 19" stroke="currentColor" stroke-width="1.2" opacity="0.6"/>
+  <path d="M14 22C14 22 16.5 20.5 18 21" stroke="currentColor" stroke-width="1.2" opacity="0.6"/>
+</svg>
