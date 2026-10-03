@@ -256,7 +256,7 @@ export const siteConfig = {
       },
       {
         name: "Jacksonville Arboretum & Botanical Gardens",
-        note: "Beautiful Arboretum and it’s where Nick and Julie got engaged.",
+        note: "Beautiful Arboretum and it’s where Nick and Julie had their first date and got engaged.",
         url: "http://www.jacksonvillearboretum.org/",
       },
       {
