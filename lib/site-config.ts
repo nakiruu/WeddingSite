@@ -107,9 +107,8 @@ export const siteConfig = {
   },
 
   meals: [
-    { value: "chicken", label: "Herb-Roasted Chicken" },
-    { value: "salmon", label: "Pan-Seared Salmon" },
-    { value: "vegetarian", label: "Garden Vegetable Risotto" },
+    { value: "pulled-pork", label: "Pulled Pork" },
+    { value: "chicken", label: "Chicken" },
   ] satisfies MealOption[],
 
   nav: [

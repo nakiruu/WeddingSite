@@ -20,11 +20,10 @@ describe("siteConfig", () => {
     expect(siteConfig.rsvpDeadline).toBe("November 14, 2026");
   });
 
-  it("offers exactly the three meals from the design", () => {
+  it("offers exactly the two meal choices", () => {
     expect(siteConfig.meals.map((m) => m.label)).toEqual([
-      "Herb-Roasted Chicken",
-      "Pan-Seared Salmon",
-      "Garden Vegetable Risotto",
+      "Pulled Pork",
+      "Chicken",
     ]);
   });
 

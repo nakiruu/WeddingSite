@@ -80,7 +80,7 @@ describe("rsvps", () => {
   const accepting = {
     guestName: "Dana Whitfield",
     attendance: "accept" as const,
-    meal: "salmon" as const,
+    meal: "pulled-pork" as const,
     dietary: "No shellfish",
     plusOne: true,
     plusOneName: "Rowan Hale",
@@ -97,7 +97,7 @@ describe("rsvps", () => {
     const [row] = listRsvps(db);
     expect(row.guestName).toBe("Dana Whitfield");
     expect(row.attendance).toBe("accept");
-    expect(row.meal).toBe("salmon");
+    expect(row.meal).toBe("pulled-pork");
     expect(row.dietary).toBe("No shellfish");
     expect(row.plusOne).toBe(true);
     expect(row.plusOneName).toBe("Rowan Hale");

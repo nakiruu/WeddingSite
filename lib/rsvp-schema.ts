@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const MEAL_VALUES = ["chicken", "salmon", "vegetarian"] as const;
+export const MEAL_VALUES = ["pulled-pork", "chicken"] as const;
 export type MealValue = (typeof MEAL_VALUES)[number];
 
 const optionalNote = z

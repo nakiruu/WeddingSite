@@ -36,7 +36,7 @@ function seedRsvp() {
   return insertRsvp(getDb(), {
     guestName: "Dana Whitfield",
     attendance: "accept",
-    meal: "salmon",
+    meal: "pulled-pork",
     plusOne: false,
   });
 }

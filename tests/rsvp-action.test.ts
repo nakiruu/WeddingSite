@@ -11,7 +11,7 @@ describe("submitRsvp", () => {
     const result = await submitRsvp({
       guestName: "Dana Whitfield",
       attendance: "accept",
-      meal: "salmon",
+      meal: "pulled-pork",
       plusOne: false,
     });
     expect(result.ok).toBe(true);
@@ -19,7 +19,7 @@ describe("submitRsvp", () => {
     const rows = listRsvps(getDb());
     expect(rows).toHaveLength(1);
     expect(rows[0].guestName).toBe("Dana Whitfield");
-    expect(rows[0].meal).toBe("salmon");
+    expect(rows[0].meal).toBe("pulled-pork");
   });
 
   it("rejects a payload that skipped client validation", async () => {
@@ -40,7 +40,7 @@ describe("submitRsvp", () => {
     const result = await submitRsvp({
       guestName: "Dana Whitfield",
       attendance: "accept",
-      meal: "salmon",
+      meal: "pulled-pork",
       plusOne: true,
     });
     expect(result.ok).toBe(false);
@@ -54,7 +54,7 @@ describe("submitRsvp", () => {
     const result = await submitRsvp({
       guestName: "Dana Whitfield",
       attendance: "decline",
-      meal: "salmon",
+      meal: "pulled-pork",
       plusOne: true,
       plusOneName: "Rowan Hale",
     });

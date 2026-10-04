@@ -4,7 +4,7 @@ import { rsvpSchema, normalizeRsvp } from "@/lib/rsvp-schema";
 const accepting = {
   guestName: "Dana Whitfield",
   attendance: "accept" as const,
-  meal: "salmon" as const,
+  meal: "pulled-pork" as const,
   plusOne: false,
 };
 
@@ -127,7 +127,7 @@ describe("normalizeRsvp", () => {
       guestName: "Dana Whitfield",
       attendance: "decline",
       plusOne: true,
-      meal: "salmon",
+      meal: "pulled-pork",
       dietary: "No shellfish",
       plusOneName: "Rowan Hale",
       plusOneMeal: "chicken",

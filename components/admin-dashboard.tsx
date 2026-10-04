@@ -68,7 +68,7 @@ export function AdminDashboard({
 
         <section className="mb-12">
           <SectionEyebrow className="mb-4">Meals to order</SectionEyebrow>
-          <div className="grid grid-cols-1 gap-px bg-border sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-px bg-border sm:grid-cols-2">
             {mealCounts.map((m) => (
               <div key={m.label} className="bg-card px-4 py-4">
                 <p className="font-display text-2xl text-foreground">
