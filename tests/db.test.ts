@@ -40,8 +40,8 @@ describe("gift claims", () => {
 
   it("keeps separate gifts independent", () => {
     claimGift(db, "breville", "Dana");
-    claimGift(db, "zojirushi", "Rowan");
-    expect(listClaimedItemIds(db).sort()).toEqual(["breville", "zojirushi"]);
+    claimGift(db, "ninja", "Rowan");
+    expect(listClaimedItemIds(db).sort()).toEqual(["breville", "ninja"]);
   });
 
   it("records who claimed and when", () => {
@@ -59,7 +59,7 @@ describe("gift claims", () => {
   });
 
   it("allows a claim with no name argument at all", () => {
-    expect(claimGift(db, "zojirushi").ok).toBe(true);
+    expect(claimGift(db, "ninja").ok).toBe(true);
     expect(listClaims(db)[0].claimedBy).toBeNull();
   });
 

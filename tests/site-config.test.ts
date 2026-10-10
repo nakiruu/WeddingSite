@@ -60,16 +60,16 @@ describe("siteConfig", () => {
 });
 
 describe("registry", () => {
-  it("carries the three gifts from the canvas, in order", () => {
+  it("carries the three gifts, in order", () => {
     expect(siteConfig.registry.gifts.map((g) => g.id)).toEqual([
       "breville",
+      "ninja",
       "kitchenaid",
-      "zojirushi",
     ]);
     expect(siteConfig.registry.gifts.map((g) => g.price)).toEqual([
-      "$799.95",
-      "$399.99",
-      "$189.99",
+      "$249.95",
+      "$89.99",
+      "$299.99",
     ]);
   });
 

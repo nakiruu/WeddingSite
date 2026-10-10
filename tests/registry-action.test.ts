@@ -46,8 +46,8 @@ describe("claimGiftAction", () => {
 
   it("lets different guests claim different gifts", async () => {
     await claimGiftAction("breville", "Dana");
-    await claimGiftAction("zojirushi", "Rowan");
-    expect((await getClaimedIds()).sort()).toEqual(["breville", "zojirushi"]);
+    await claimGiftAction("ninja", "Rowan");
+    expect((await getClaimedIds()).sort()).toEqual(["breville", "ninja"]);
   });
 });
 
@@ -83,7 +83,7 @@ describe("releaseGiftAction", () => {
   });
 
   it("says so when the gift was not claimed", async () => {
-    const release = await releaseGiftAction("zojirushi", "AAAA-BBBB");
+    const release = await releaseGiftAction("ninja", "AAAA-BBBB");
     expect(release.ok).toBe(false);
     if (!release.ok) expect(release.message).toMatch(/not currently claimed/i);
   });

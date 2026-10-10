@@ -139,9 +139,9 @@ describe("releaseClaimAction", () => {
 
   it("leaves other claims untouched", async () => {
     claimGift(getDb(), "breville", "Dana");
-    claimGift(getDb(), "zojirushi", "Rowan");
+    claimGift(getDb(), "ninja", "Rowan");
 
     await releaseClaimAction("breville");
-    expect(listClaimedItemIds(getDb())).toEqual(["zojirushi"]);
+    expect(listClaimedItemIds(getDb())).toEqual(["ninja"]);
   });
 });

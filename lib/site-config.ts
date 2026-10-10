@@ -7,7 +7,7 @@ export type Gift = {
   description: string;
   price: string;
   url: string;
-  icon: "espresso" | "mixer" | "ricecooker";
+  icon: "espresso" | "mixer" | "blender";
   iconLabel: string;
 };
 export type Hotel = {
@@ -133,13 +133,24 @@ export const siteConfig = {
       {
         id: "breville",
         brand: "Breville",
-        name: "Barista Express Impress",
+        name: "Bambino Espresso Machine",
         description:
-          "Semi-automatic espresso machine with built-in grinder. Damson Blue.",
-        price: "$799.95",
-        url: "https://www.amazon.com/Breville-Barista-Express-Espresso-BES876DBL/dp/B0CGJZW53Q/",
+          "Compact manual espresso machine for café-quality shots at home. Brushed Stainless Steel.",
+        price: "$249.95",
+        url: "https://www.amazon.com/dp/B0B1JPPG2L",
         icon: "espresso",
         iconLabel: "Espresso Machine",
+      },
+      {
+        id: "ninja",
+        brand: "Ninja",
+        name: "Professional Plus Blender",
+        description:
+          "1400-watt blender with a 72 oz pitcher, Total Crushing blades and 3 Auto-iQ presets.",
+        price: "$89.99",
+        url: "https://www.amazon.com/dp/B0855B5Z6F",
+        icon: "blender",
+        iconLabel: "Blender",
       },
       {
         id: "kitchenaid",
@@ -147,21 +158,10 @@ export const siteConfig = {
         name: "Classic 4.5 Qt Stand Mixer",
         description:
           "10-speed tilt-head stand mixer with 4.5-quart stainless steel bowl. Onyx Black.",
-        price: "$399.99",
-        url: "https://www.amazon.com/KitchenAid-Classic-Quart-Tilt-Head-K45SSOB/dp/B003OXNBYC/",
+        price: "$299.99",
+        url: "https://www.amazon.com/dp/B003OXNBYC",
         icon: "mixer",
         iconLabel: "Stand Mixer",
-      },
-      {
-        id: "zojirushi",
-        brand: "Zojirushi",
-        name: "Micom 3-Cup Rice Cooker",
-        description:
-          "Fuzzy logic rice cooker & warmer with 8 preset cooking options. Stainless Black.",
-        price: "$189.99",
-        url: "https://www.amazon.com/Zojirushi-NS-LGC05XB-Cooker-uncooked-Stainless/dp/B01EVHWNVG/",
-        icon: "ricecooker",
-        iconLabel: "Rice Cooker",
       },
     ] satisfies Gift[],
   },

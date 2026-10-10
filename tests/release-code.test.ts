@@ -48,7 +48,7 @@ describe("claiming issues a release code", () => {
   });
 
   it("gives different gifts different codes", () => {
-    expect(claim("breville")).not.toBe(claim("zojirushi", "Rowan"));
+    expect(claim("breville")).not.toBe(claim("ninja", "Rowan"));
   });
 
   it("stores only the hash, never the code itself", () => {
@@ -88,12 +88,12 @@ describe("releasing a claim", () => {
 
   it("will not release one gift with another gift's code", () => {
     const brevilleCode = claim("breville");
-    claim("zojirushi", "Rowan");
-    expect(releaseGift(db, "zojirushi", brevilleCode)).toEqual({
+    claim("ninja", "Rowan");
+    expect(releaseGift(db, "ninja", brevilleCode)).toEqual({
       ok: false,
       reason: "wrong-code",
     });
-    expect(listClaimedItemIds(db).sort()).toEqual(["breville", "zojirushi"]);
+    expect(listClaimedItemIds(db).sort()).toEqual(["breville", "ninja"]);
   });
 
   it("accepts the code however the guest retypes it", () => {

@@ -17,13 +17,12 @@ const paths: Record<Gift["icon"], React.ReactNode> = {
       <ellipse cx="14" cy="19" rx="5" ry="2.5" />
     </>
   ),
-  ricecooker: (
+  blender: (
     <>
-      <path d="M4 10h16v7a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-7Z" />
-      <path d="M3 10h18" />
-      <path d="M8 6c0-1.5 1.5-2 1.5-3.5" />
-      <path d="M12 6c0-1.5 1.5-2 1.5-3.5" />
-      <path d="M16 6c0-1.5 1.5-2 1.5-3.5" />
+      <path d="M7 2h10l-1.5 11h-7L7 2Z" />
+      <path d="M9 13v5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-5" />
+      <line x1="9" y1="20" x2="15" y2="20" />
+      <line x1="9" y1="6" x2="15" y2="6" />
     </>
   ),
 };
